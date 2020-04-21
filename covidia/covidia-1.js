@@ -1,0 +1,35 @@
+const graphContainer = document.getElementById("graph-container");
+ 
+// Display options
+var withoutAuthor = GitgraphJS.templateExtend("metro", {
+  commit: {
+    message: {
+      displayAuthor: false,
+    },
+  },
+});
+const options = {
+  template: withoutAuthor,
+  orientation: 'vertical-reverse'
+}
+
+// Instantiate the graph.
+const gitgraph = GitgraphJS.createGitgraph(graphContainer,options);
+
+// Simulate git commands with Gitgraph API.
+const master = gitgraph.branch("master");
+master.commit("Initial commit");
+
+const develop = gitgraph.branch("develop");
+develop.commit("Add TypeScript");
+
+const aFeature = gitgraph.branch("a-feature");
+aFeature
+  .commit("Make it work")
+  .commit({ subject: "Make it right", hash: "test" })
+  .commit("Make it fast");
+
+develop.merge(aFeature);
+develop.commit("Prepare v1");
+
+master.merge(develop).tag("v1.0.0");
